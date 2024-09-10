@@ -1,0 +1,47 @@
+# vim:ft=i3config:
+
+# screenshot
+# sudo dnf install maim xclip xdotool
+# vim ~/.config/i3/config
+## Screenshots
+bindsym Print exec --no-startup-id maim "/home/$USER/Pictures/Screenshots/$(date).png"
+bindsym $mod+Print exec --no-startup-id maim --window $(xdotool getactivewindow) "/home/$USER/Pictures/Screenshots/$(date).png"
+bindsym Shift+Print exec --no-startup-id maim --select "/home/$USER/Pictures/Screenshots/$(date).png"
+## Clipboard Screenshots
+bindsym Ctrl+Print exec --no-startup-id maim | xclip -selection clipboard -t image/png
+bindsym Ctrl+$mod+Print exec --no-startup-id maim --window $(xdotool getactivewindow) | xclip -selection clipboard -t image/png
+bindsym Ctrl+Shift+Print exec --no-startup-id maim --select | xclip -selection clipboard -t image/png
+
+# screenshot, store and send to clipboard
+bindsym Print exec NOW=$(date +%d-%b-%Y_%H-%M-%S) && maim --format png --select > ~/screenshots/screenshot_$NOW.png && xclip -selection clip -t image/png ~/screenshots/screenshot_$NOW.png
+
+# Define the directory and format for the screenshot filename
+set $DIR_SS ~/Pictures/Screenshots
+# can use date in a variable
+set $DATE $(date '+%Y-%m-%d %H-%M-%S')
+set $FILENAME_SS "Screenshot from $(date '+%Y-%m-%d %H-%M-%S').png"
+set FILEPATH_SS "$DIR_SS/$FILENAME_SS"
+# Create the directory if it doesn't exist
+mkdir -p "$DIR"
+# Take a screenshot and copy it to the clipboard
+bindsym Print exec --no-startup-id maim "$FILEPATH_SS" && xclip -selection clipboard -t image/png -i "$FILEPATH_SS"
+bindsym $mod+Print exec --no-startup-id maim --window $(xdotool getactivewindow) "$FILEPATH_SS" && xclip -selection clipboard -t image/png -i "$FILEPATH_SS"
+bindsym Shift+Print exec --no-startup-id maim --select "$FILEPATH_SS" && xclip -selection clipboard -t image/png -i "$FILEPATH_SS"
+
+
+# Screenshot from 2024-06-07 01-14-55
+# DIR=~/Pictures/Screenshots
+# FILENAME="Screenshot from $(date '+%Y-%m-%d %H-%M-%S').png"
+# FILEPATH="$DIR/$FILENAME"
+# screenshot
+bindsym Print exec --no-startup-id 'DIR=~/Pictures/Screenshots; FILENAME="Screenshot from $(date "+%Y-%m-%d %H-%M-%S").png"; FILEPATH="$DIR/$FILENAME"; maim -u --format png "$FILEPATH" && xclip -selection clipboard -t image/png -i "$FILEPATH"'
+
+
+#
+# Add the following lines to bind the screenshot script to a key (e.g., Print Screen key)
+# full screenshot
+bindsym Print exec ~/scripts/screenshot.sh
+# window screenshot
+bindsym $mod+Print exec ~/scripts/screenshot-window.sh
+# region screenshot
+bindsym Shift+Print exec ~/scripts/screenshot-region.sh
